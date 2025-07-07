@@ -1,9 +1,12 @@
 package com.game.ai;
 
 import com.game.ai.board.TicTacToeBoard;
-import com.game.ai.gameEngine.GameResult;
-import com.game.ai.model.Board;
+import com.game.ai.gameEngine.GameEngine;
 import com.game.ai.model.Cell;
+import com.game.ai.model.Move;
+import com.game.ai.model.Player;
+import com.game.ai.service.AIEngineService;
+import com.game.ai.util.TicTacToeBoardHelper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -14,11 +17,14 @@ public class TurnBasedGameAiApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(TurnBasedGameAiApplication.class, args);
-		startGame();
+		runGame();
 	}
-	private static void startGame() {
+	private static void runGame() {
 		System.out.println("Starting Turn-Based Game AI...");
-		TicTacToeBoard board = new TicTacToeBoard();
+		GameEngine gameEngine = new GameEngine();
+		TicTacToeBoard board = (TicTacToeBoard) gameEngine.startGame("Tic-Tac-Toe");
+		AIEngineService aiEngineService = new AIEngineService();
+		Move playerMove = new Move(new Player("Human", 1), null);
 		System.out.println("Game started. You can now make moves on the Tic Tac Toe board.");
 		for (int i = 0; i < 9; i++) {
 			Scanner scanner = new Scanner(System.in);
@@ -33,21 +39,11 @@ public class TurnBasedGameAiApplication {
 					i--; // Repeat this turn
 					continue;
 				}
-				Cell cell = new Cell(row, col);
-				cell.setValue(1);// Assuming player 1 is making the move
-				board.setCell(cell);
-				board.makeAIMove();
-				board.printCells();
-				if (board.isWinner(1).getResult() == GameResult.Result.WIN) {
-					System.out.println("Player 1 wins!");
-					return;
-				} else 	if (board.isWinner(2).getResult() == GameResult.Result.WIN) {
-					System.out.println("AI wins!");
-					return;
-				}else if (board.isFull().getResult() == GameResult.Result.DRAW) {
-					System.out.println("The game is a draw!");
-					return;
-				}
+				playerMove.setCell(new Cell(row, col));
+				gameEngine.makeMove(playerMove, board);
+				aiEngineService.makeAIMove(board);
+				TicTacToeBoardHelper.printCells(board);
+				System.out.println(TicTacToeBoardHelper.checkForWinner(board).getMessage());
 			} catch (Exception e) {
 				System.out.println("Invalid input. Please enter two numbers separated by space.");
 				i--; // Repeat this turn

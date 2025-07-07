@@ -2,32 +2,29 @@ package com.game.ai.gameEngine;
 
 import com.game.ai.board.TicTacToeBoard;
 import com.game.ai.model.Board;
-import com.game.ai.model.Cell;
-import com.game.ai.model.Player;
+import com.game.ai.model.Move;
 
 public class GameEngine {
-    // This class will handle the game logic, including player turns, AI moves, and game state management.
 
-    public void startGame() {
-        // Initialize game components, such as board and players
+    public Board startGame(String board) {
         System.out.println("Starting Game Engine...");
-        // Here you would set up the game logic, AI, and player interactions
+        if(board.equalsIgnoreCase("Tic-Tac-Toe")) {
+            return new TicTacToeBoard();
+        }else {
+            System.out.println("Unsupported game type: " + board);
+            return null;
+        }
     }
 
-    public void makeMove(Player player, Cell cell, Board board) {
+    public void makeMove(Move move, Board board) {
         TicTacToeBoard ticTacToeBoard = (TicTacToeBoard) board;
         // Logic for making a move on the board
-        System.out.println("Player " + player + " makes a move at (" + cell.getRow() + ", " + cell.getCol() + ")");
-        if (ticTacToeBoard.getCell(cell) == 0) { // Assuming 0 means empty
-            ticTacToeBoard.setCell(cell);
+        System.out.println("Player " + move.getPlayer().getName() + " makes a move at (" + move.getCell().getRow() + ", " + move.getCell().getCol() + ")");
+        if (ticTacToeBoard.getCell(move.getCell()) == 0) { // Assuming 0 means empty
+            ticTacToeBoard.setCell(move.getCell(), move.getPlayer().getSymbol());
             System.out.println("Move made successfully.");
         } else {
             System.out.println("Cell is already occupied. Try another move.");
         }
-    }
-
-    public void checkGameState() {
-        // Logic to check if the game is over (win/loss/draw)
-        System.out.println("Checking game state...");
     }
 }

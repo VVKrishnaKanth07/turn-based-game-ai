@@ -1,23 +1,19 @@
-package com.game.ai.gameEngine;
+package com.game.ai.model;
+
+import com.game.ai.enums.GameStatus;
 
 public class GameResult {
-    public enum Result {
-        WIN,
-        LOSS,
-        DRAW,
-        IN_PROGRESS
-    }
-    private Result result;
+    private GameStatus result;
     private String message;
     private int winningPlayer; // Player ID of the winning player, if applicable
     private int[][] boardState; // Current state of the board, if applicable
-    public GameResult(Result result, String message, int winningPlayer, int[][] boardState) {
+    public GameResult(GameStatus result, String message, int winningPlayer, int[][] boardState) {
         this.result = result;
         this.message = message;
         this.winningPlayer = winningPlayer;
         this.boardState = boardState;
     }
-    public Result getResult() {
+    public GameStatus getResult() {
         return result;
     }
     public String getMessage() {
@@ -29,7 +25,7 @@ public class GameResult {
     public int[][] getBoardState() {
         return boardState;
     }
-    public void setResult(Result result) {
+    public void setResult(GameStatus result) {
         this.result = result;
     }
     public void setMessage(String message) {
